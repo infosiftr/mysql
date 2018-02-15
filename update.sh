@@ -50,4 +50,8 @@ for version in "${versions[@]}"; do
 			-e 's!(http://repo.mysql.com/apt/debian/) [^ ]+!\1 '"$debianSuite"'!' \
 			"$version/Dockerfile"
 	)
+
+	if [ -f "$version/alpine/Dockerfile" ]; then
+		# TODO alpine MYSQL_VERSION
+	fi
 done

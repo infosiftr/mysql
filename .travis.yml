@@ -3,6 +3,7 @@ services: docker
 
 env:
   - VERSION=8.0
+  - VERSION=8.0 VARIANT=alpine
   - VERSION=5.7
   - VERSION=5.6
   - VERSION=5.5
@@ -12,8 +13,8 @@ install:
 
 before_script:
   - env | sort
-  - cd "$VERSION"
-  - image="mysql:$VERSION"
+  - cd "$VERSION/$VARIANT"
+  - image="mysql:$VERSION${VARIANT:+-$VARIANT}"
 
 script:
   - travis_retry docker build -t "$image" .
