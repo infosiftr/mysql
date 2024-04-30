@@ -129,8 +129,17 @@ docker_temp_server_start() {
 # Stop the server. When using a local socket file mysqladmin will block until
 # the shutdown is complete.
 docker_temp_server_stop() {
+	local pidfile pid
+	if pidfile="$(mysql_get_config 'pid-file' "$@")"; then
+		# https://github.com/docker-library/mysql/issues/985#issuecomment-1854952669
+		# TODO we don't get/have a pid-file by default 😭
+		pid="$(< "$pidfile")"
+	fi
 	if ! mysqladmin --defaults-extra-file=<( _mysql_passfile ) shutdown -uroot --socket="${SOCKET}"; then
 		mysql_error "Unable to shut down server."
+	fi
+	if [ -n "$pid" ]; then
+		wait "$pid"
 	fi
 }
 
